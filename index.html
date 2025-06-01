@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Relógio Analógico</title>
+  <style>
+    body {
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      background: #121212;
+    }
+    canvas {
+      background: #1e1e1e;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #00ffcc88;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="relogio" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById("relogio");
+    const ctx = canvas.getContext("2d");
+    const raio = canvas.width / 2;
+    ctx.translate(raio, raio);
+
+    function desenhaRelogio() {
+      ctx.clearRect(-raio, -raio, canvas.width, canvas.height);
+      desenhaFace();
+      desenhaNumeros();
+      desenhaPonteiros();
+    }
+
+    function desenhaFace() {
+      ctx.beginPath();
+      ctx.arc(0, 0, raio * 0.95, 0, 2 * Math.PI);
+      ctx.fillStyle = "#222";
+      ctx.fill();
+      ctx.strokeStyle = "#00ffcc";
+      ctx.lineWidth = raio * 0.03;
+      ctx.stroke();
+    }
+
+    function desenhaNumeros() {
+      ctx.font = raio * 0.15 + "px monospace";
+      ctx.fillStyle = "#00ffcc";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      for (let num = 1; num <= 12; num++) {
+        const ang = (num * Math.PI) / 6;
+        const x = Math.cos(ang) * raio * 0.75;
+        const y = Math.sin(ang) * raio * 0.75;
+        ctx.fillText(num, x, y);
+      }
+    }
+
+    function desenhaPonteiros() {
+      const agora = new Date();
+      const hora = agora.getHours() % 12;
+      const minuto = agora.getMinutes();
+      const segundo = agora.getSeconds();
+
+      const angHora = (hora + minuto / 60) * (Math.PI / 6);
+      const angMinuto = (minuto + segundo / 60) * (Math.PI / 30);
+      const angSegundo = segundo * (Math.PI / 30);
+
+      desenhaPonteiro(angHora, raio * 0.5, raio * 0.07, "#fff");
+      desenhaPonteiro(angMinuto, raio * 0.7, raio * 0.05, "#0ff");
+      desenhaPonteiro(angSegundo, raio * 0.85, raio * 0.02, "#f00");
+    }
+
+    function desenhaPonteiro(ang, comprimento, largura, cor) {
+      ctx.beginPath();
+      ctx.lineWidth = largura;
+      ctx.lineCap = "round";
+      ctx.moveTo(0, 0);
+      ctx.rotate(ang);
+      ctx.lineTo(0, -comprimento);
+      ctx.strokeStyle = cor;
+      ctx.stroke();
+      ctx.rotate(-ang);
+    }
+
+    setInterval(desenhaRelogio, 1000);
+  </script>
+</body>
+</html>
