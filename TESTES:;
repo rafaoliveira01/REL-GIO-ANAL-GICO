@@ -1,0 +1,3 @@
+javascript:(function(){
+  window.open("https://rafaoliveira01.github.io/REL%C3%93GIO-ANALOGICO/", "_blank", "width=420,height=460");
+})();
